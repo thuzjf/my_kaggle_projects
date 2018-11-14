@@ -102,3 +102,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+## Directory-based project format:
+.idea/
+
+# My data files
+*/data
+*/output
