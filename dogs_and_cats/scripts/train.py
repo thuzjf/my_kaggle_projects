@@ -16,8 +16,8 @@ from network import VClassNet
 
 if __name__ == "__main__":
   resize_num = 224
-  im_dir = './data/train'
-  out_dir = './output'
+  im_dir = '../data/train'
+  out_dir = '../output'
 
   html_dir = os.path.join(out_dir, 'htmls')
   if not os.path.isdir(html_dir):

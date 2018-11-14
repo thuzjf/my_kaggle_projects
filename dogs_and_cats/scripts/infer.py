@@ -13,10 +13,10 @@ from helpers import load_checkpoint
 from network import VClassNet
 
 
-im_dir = "/media/cnzjf/data/git_work/kaggle/dogs_and_cats/data/debug_dataset"
+im_dir = "../data/debug_dataset"
 filelist = [f for f in os.listdir(im_dir) if '.jpg' in f]
 
-model_dir = './output'
+model_dir = '../output/checkpoints'
 resize_num = 128
 epoch = 49
 
@@ -63,7 +63,7 @@ for image_file in filelist:
 dataframe = pd.DataFrame(columns=['id', 'label'])
 dataframe.id = range(1, len(filelist) + 1)
 dataframe.label = pred_labels
-dataframe.to_csv('./submission.csv')
+dataframe.to_csv('../output/submission.csv')
 
 
 

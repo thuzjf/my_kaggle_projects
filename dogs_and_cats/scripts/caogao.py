@@ -5,8 +5,8 @@
 # @Software: PyCharm
 
 from helpers import Ploter
-logfile = '/media/cnzjf/data/git_work/kaggle/dogs_and_cats/output/log.txt'
-html = '/media/cnzjf/data/git_work/kaggle/dogs_and_cats/output/loss.html'
+logfile = '../output/log.txt'
+html = '../output/loss.html'
 
 ploter = Ploter(logfile, html, ['loss'])
 ploter.plot()
