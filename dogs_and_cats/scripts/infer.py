@@ -9,7 +9,7 @@ import os
 import pandas as pd
 import torch
 import torch.nn as nn
-from helpers import load_checkpoint
+from my_utils_for_dl.helpers import load_checkpoint
 from network import VClassNet
 
 
@@ -20,6 +20,10 @@ model_dir = '../output/checkpoints'
 resize_num = 128
 epoch = 49
 
+net = VClassNet(3, 2, resize_num)
+net = net.cuda()
+model = nn.DataParallel(net, device_ids=[0])
+model = load_checkpoint(model, epoch, model_dir)
 
 pred_labels = []
 for image_file in filelist:
@@ -51,19 +55,15 @@ for image_file in filelist:
   im_tensor.unsqueeze_(0)
   im_tensor = im_tensor.float().cuda()
 
-  net = VClassNet(3, 2, resize_num)
-  net = net.cuda()
-  model = nn.DataParallel(net, device_ids=[0])
-
-  model = load_checkpoint(model, epoch, model_dir)
-  pred = model(im_tensor)
-  pred_label = pred.argmax().item()
+  with torch.no_grad():
+    pred = model(im_tensor)
+    pred_label = pred.argmax().item()
   pred_labels.append(pred_label)
 
 dataframe = pd.DataFrame(columns=['id', 'label'])
 dataframe.id = range(1, len(filelist) + 1)
 dataframe.label = pred_labels
-dataframe.to_csv('../output/submission.csv')
+dataframe.to_csv('../output/submission.csv', index=False)
 
 
 
