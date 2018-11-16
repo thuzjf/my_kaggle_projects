@@ -18,15 +18,7 @@ class Mnistnet(nn.Module):
   def __init__(self):
     super(Mnistnet, self).__init__()
     self.convblock = nn.Sequential(
-      nn.Conv2d(1, 32, 3),
-      nn.BatchNorm2d(32),
-      nn.ReLU(),
-      nn.Conv2d(32, 32, 3),
-      nn.BatchNorm2d(32),
-      nn.ReLU(),
-      nn.MaxPool2d(2, 2),
-
-      nn.Conv2d(32, 64, 3),
+      nn.Conv2d(1, 64, 3),
       nn.BatchNorm2d(64),
       nn.ReLU(),
       nn.Conv2d(64, 64, 3),
@@ -37,13 +29,23 @@ class Mnistnet(nn.Module):
       nn.Conv2d(64, 128, 3),
       nn.BatchNorm2d(128),
       nn.ReLU(),
-      nn.Conv2d(128, 128, 2),
+      nn.Conv2d(128, 128, 3),
       nn.BatchNorm2d(128),
+      nn.ReLU(),
+      nn.MaxPool2d(2, 2),
+
+      nn.Conv2d(128, 256, 3),
+      nn.BatchNorm2d(256),
+      nn.ReLU(),
+      nn.Conv2d(256, 256, 2),
+      nn.BatchNorm2d(256),
       nn.ReLU())
 
     self.fc = nn.Sequential(
-      nn.Linear(128, 100),
-      nn.Linear(100, 10))
+      nn.Linear(256, 128),
+      nn.Dropout(0.2),
+      nn.ReLU(),
+      nn.Linear(128, 10))
 
     self.softmax = nn.Softmax(dim=1)
 

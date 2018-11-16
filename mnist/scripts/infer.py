@@ -23,6 +23,7 @@ epoch = 133
 
 net = Mnistnet()
 net = net.cuda()
+net.eval()
 model = nn.DataParallel(net, device_ids=[0])
 model = load_checkpoint(model, epoch, model_dir)
 

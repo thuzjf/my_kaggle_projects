@@ -17,7 +17,7 @@ from network import Mnistnet
 
 if __name__ == "__main__":
   im_dir = '../data'
-  out_dir = '../output'
+  out_dir = '../output2'
 
   html_dir = os.path.join(out_dir, 'htmls')
   if not os.path.isdir(html_dir):
@@ -31,12 +31,13 @@ if __name__ == "__main__":
 
   training_set = MyDataset(im_dir, True)
   training_set_loader = DataLoader(training_set,
-                                   batch_size=1000,
+                                   batch_size=500,
                                    shuffle=True)
 
   net = Mnistnet()
   net = net.cuda()
   model = nn.DataParallel(net, device_ids=[0])
+  model.train()
 
   criterion = Focalloss(num_class=10, size_average=False)
   optimizer = Adam(model.parameters())
