@@ -6,40 +6,34 @@
 
 import numpy as np
 import os
-import pandas as pd
 import torch
 from torch.utils.data import Dataset
-
+from torchvision.datasets import mnist as mnist_dset
 
 class MyDataset(Dataset):
   def __init__(self, data_dir, is_training):
     super(MyDataset, self).__init__()
-    self.data = []
-    self.labels = []
     self.is_training = is_training
     if is_training:
-      csv_path = os.path.join(data_dir, "train.csv")
+      data_path = os.path.join(data_dir, "train-images.idx3-ubyte")
+      label_path = os.path.join(data_dir, 'train-labels.idx1-ubyte')
     else:
-      csv_path = os.path.join(data_dir, "test.csv")
-    data_frame = pd.read_csv(csv_path)
-    for idx, row in data_frame.iterrows():
-      if is_training:
-        label = row[0]
-        data = np.array(row[1:]).reshape([28, 28])
-        self.labels.append(label)
-      else:
-        data = np.array(row).reshape([28, 28])
-      self.data.append(data)
+      data_path = os.path.join(data_dir, "t10k-images.idx3-ubyte")
+      label_path = os.path.join(data_dir, 't10k-labels.idx1-ubyte')
+    self.data = mnist_dset.read_image_file(data_path).float()
+    self.data = self.data / 255.0
+    self.data = self.data.unsqueeze_(dim=1)
+    self.labels = mnist_dset.read_label_file(label_path).long()
+    
 
   def __len__(self):
     return len(self.data)
 
   def __getitem__(self, idx):
-    image_tensor = torch.tensor(self.data[idx])
-    image_tensor.unsqueeze_(0)
+
     if self.is_training:
-      return image_tensor.float(), self.labels[idx]
+      return self.data[idx], self.labels[idx]
     else:
-      return image_tensor.float()
+      return self.data[idx]
 
 

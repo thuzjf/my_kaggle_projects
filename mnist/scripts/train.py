@@ -10,14 +10,16 @@ import torch.nn as nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
 from my_utils_for_dl.losses import Focalloss
-from data_provider import MyDataset
 from my_utils_for_dl.helpers import save_checkpoint, setup_logger, resume_training, Ploter
-from network import Mnistnet
+
+from scripts.data_provider import MyDataset
+from scripts.network import Mnistnet, Mnistlstm
+
 
 
 if __name__ == "__main__":
-  im_dir = '../data'
-  out_dir = '../output2'
+  im_dir = '/Users/afan/my_kaggle_projects/mnsit_data'
+  out_dir = '../output'
 
   html_dir = os.path.join(out_dir, 'htmls')
   if not os.path.isdir(html_dir):
@@ -31,11 +33,12 @@ if __name__ == "__main__":
 
   training_set = MyDataset(im_dir, True)
   training_set_loader = DataLoader(training_set,
-                                   batch_size=500,
+                                   batch_size=200,
                                    shuffle=True)
 
-  net = Mnistnet()
-  net = net.cuda()
+  # net = Mnistnet()
+  net = Mnistlstm()
+
   model = nn.DataParallel(net, device_ids=[0])
   model.train()
 
@@ -44,7 +47,7 @@ if __name__ == "__main__":
 
   model, start_epoch = resume_training(model, checkpoint_dir)
   if start_epoch == 0:
-    print "no checkpoints found, starting training from scratch!"
+    print("no checkpoints found, starting training from scratch!")
     if os.path.isfile(logfile):
       os.remove(logfile)
   logger = setup_logger(logfile)
@@ -56,7 +59,7 @@ if __name__ == "__main__":
     train_iterator = iter(training_set_loader)
     for batch_idx in range(len(train_iterator)):
       image_tensor, label = train_iterator.next()
-      image_tensor, label = image_tensor.cuda(), label.cuda()
+      # image_tensor, label = image_tensor.cuda(), label.cuda()
 
       optimizer.zero_grad()
       pred = model(image_tensor)

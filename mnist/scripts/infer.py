@@ -11,8 +11,8 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from my_utils_for_dl.helpers import load_checkpoint
-from network import Mnistnet
-from data_provider import MyDataset
+from scripts.network import Mnistnet
+from scripts.data_provider import MyDataset
 from torch.utils.data import DataLoader
 
 

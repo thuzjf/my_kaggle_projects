@@ -16,11 +16,14 @@ class Focalloss(nn.Module):
       self.alpha = torch.FloatTensor(alpha)
       self.alpha = self.alpha.unsqueeze(1)
       self.alpha = self.alpha / self.alpha.sum()
-    self.alpha = self.alpha.cuda()
+    
     self.num_class = num_class
     self.gamma = gamma
     self.size_average = size_average
-    self.one_hot = torch.eye(self.num_class).cuda()
+    self.one_hot = torch.eye(self.num_class)
+    if torch.cuda.is_available():
+      self.alpha = self.alpha.cuda()
+      self.one_hot = self.one_hot.cuda()
 
   def forward(self, pred, target):
     assert pred.dim() == 2, "the shape of pred must be [sample, num_class]"
